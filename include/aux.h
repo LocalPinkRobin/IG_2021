@@ -38,5 +38,7 @@
 
 #include "tuplasg.h" // tipos: Tupla3f, Tupla2f, Tupla3d, etc.........
 
+bool comparaFloats(float a, float b, float epsilon = 0.00005f);
+
 
 #endif // AUX_H_INCLUDED

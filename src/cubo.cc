@@ -9,15 +9,15 @@ Cubo::Cubo(float lado)
 
    v.resize(8);
 
-   v[0] = {0,0,0};
-   v[1] = {0,0, lado};;
-   v[2] = {lado, 0, lado};
-   v[3] = {lado, 0, 0};
+   v[0] = {-lado/2, lado/2, -lado/2};
+   v[1] = {lado/2,lado/2, -lado/2};;
+   v[2] = {lado/2,lado/2, lado/2};
+   v[3] = {-lado/2,lado/2, lado/2};
 
-   v[4] = {0,lado,0};
-   v[5] = {0,lado, lado};;
-   v[6] = {lado, lado, lado};
-   v[7] = {lado, lado, 0};
+   v[4] = {-lado/2, -lado/2, -lado/2};
+   v[5] = {lado/2, -lado/2, -lado/2};;
+   v[6] = {lado/2, -lado/2, lado/2};
+   v[7] = {-lado/2, -lado/2, lado/2};
 
 
 
@@ -47,14 +47,18 @@ Cubo::Cubo(float lado)
    //  de las agujas del reloj, cuando esa cara se observa desde el exterior del cubo)
    
    c.resize(v.size());  //Los colores cambian cada vez que dibujamos por si cambiamos la forma de visualizacion
-
+   c_aj1.resize(v.size());
+   c_aj2.resize(v.size());
+   
    color = {69/255.0, 245/255.0, 186/255.0};
    color_aj_1 = {1.0, 0.6, 0.8};
    color_aj_2 = {201/255.0, 181/255.0, 191/255.0};
    color_aristas = {1,0,0};
    color_vertices = {0,0,1};
 
-   colorear(color);
+   
+   colorear(0);
+   colorear(3);
 
 }
 

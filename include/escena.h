@@ -5,6 +5,8 @@
 #include "malla.h"
 #include "cubo.h"
 #include "tetraedro.h"
+#include "objply.h"
+
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
 class Escena
@@ -38,6 +40,8 @@ class Escena
    Ejes ejes;
    Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
+   ObjPLY * objetoply = nullptr;
+   
    std::vector<bool> visibilidad_objetos;
    std::vector<bool> modos_dibujado;
 

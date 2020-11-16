@@ -3,6 +3,8 @@
 #include "aux.h"     // includes de OpenGL/glut/glew, windows, y librería std de C++
 #include "escena.h"
 #include "malla.h" // objetos: Cubo y otros....
+#include "objply.h"
+
 
 //**************************************************************************
 // constructor de la escena (no puede usar ordenes de OpenGL)
@@ -24,11 +26,14 @@ Escena::Escena()
 
     cubo = new Cubo(50);
     tetraedro = new Tetraedro(50);
-    int num_obj = 2; // 0. Cubo 1. Tetraedro
+    objetoply = new ObjPLY("./plys/beethoven.ply");
+
+    int num_obj = 3; // 0. Cubo 1. Tetraedro 2.Beethoven
 
    visibilidad_objetos.resize(num_obj);
-   visibilidad_objetos [0] = true;
+   visibilidad_objetos [0] = false;
    visibilidad_objetos [1] = false;
+   visibilidad_objetos [2] = true;
 
    modos_dibujado.resize(4); //0. Solido, 1. puntos, 2. rayas, 3. ajedrez
    modos_dibujado [0] = true;
@@ -85,7 +90,7 @@ void Escena::dibujar()
     }
 
     if (modos_dibujado[1]){
-       glPointSize(6);
+      glPointSize(6);
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
       dibujarObjeto(GL_POINT);
     }
@@ -104,24 +109,33 @@ void Escena::dibujar()
 void Escena::dibujarObjeto(GLenum modo){
 
    if (modo == GL_FILL){
-      cubo->colorear(cubo->getColorSolido());
-      tetraedro->colorear(tetraedro->getColorSolido());
+      cubo->colorear(0);
+      tetraedro->colorear(0);
+      objetoply->colorear(0);
    } else if (modo == GL_POINT){
-      cubo->colorear(cubo->getColorPunto());
-      tetraedro->colorear(tetraedro->getColorPunto());       
+      cubo->colorear(1);
+      tetraedro->colorear(1); 
+      objetoply->colorear(1);      
    } else if (modo == GL_LINE){
       
-      cubo->colorear(cubo->getColorLinea());
-      tetraedro->colorear(tetraedro->getColorLinea());    
+      cubo->colorear(2);
+      tetraedro->colorear(2);   
+      objetoply->colorear(2); 
    }
 
    if (cubo != nullptr && visibilidad_objetos[0]){
-      cubo->draw(modo_dibujado);
+      cubo->draw(modo_dibujado, modos_dibujado[3]);
    }
 
    if (tetraedro != nullptr && visibilidad_objetos[1]){
-      tetraedro->draw(modo_dibujado);
+      tetraedro->draw(modo_dibujado, modos_dibujado[3]);
    }
+
+   if (objetoply != nullptr && visibilidad_objetos[2]){
+      objetoply->draw(modo_dibujado, modos_dibujado[3]);
+   }
+
+
 }
 
 //**************************************************************************
@@ -150,6 +164,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          // ESTAMOS EN MODO SELECCION DE OBJETO
          modoMenu=SELOBJETO;
          cout << "Modo seleccion objeto" << endl;
+         cout << "C --> Visualizar/ocultar Cubo" << endl
+              << "T --> Visualizar/ocultar Tetraedro"<< endl
+              << "Q --> Quitar modo seleccion de objeto" << endl;
          break ;
       case 'C':
          if(modoMenu == SELOBJETO){
@@ -166,30 +183,37 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
          modoMenu=SELVISUALIZACION;
          cout << "Modo visualizacion" << endl;
+         cout << "P --> Modo puntos" << endl
+              << "L --> Modo lineas"<< endl
+              << "S --> Modo solido"<< endl
+              << "A --> Modo Ajedrez"<< endl
+              << "Q --> Quitar modo seleccion de visualizacion" << endl;
 
          break ;
        case 'D' :
          // ESTAMOS EN MODO SELECCION DE DIBUJADO
          modoMenu=SELDIBUJADO;
          cout << "Actualizar el modo de dibujado" << endl;
+         cout << "1 --> Modo glDrawElements"<< endl
+              << "2 --> Modo diferido"<< endl
+              << "Q --> Quitar modo seleccion de dibujado" << endl;
 
          break ;
 
          case '1':
-         if(modo_dibujado != 2){
+         if( modoMenu==SELDIBUJADO ){
             modo_dibujado = 0;
             cout << "Dibujando en modo inmediato";
          }
          break;
          case '2':
-            if(modo_dibujado != 2){
+            if(modoMenu==SELDIBUJADO){
                modo_dibujado = 1;
                cout << "Dibujando en modo diferido";
             }
          break;
          case 'A':
             if (modoMenu == SELVISUALIZACION){
-               modo_dibujado = 2;
                modos_dibujado[3] = true;
                modos_dibujado[0] = false;
                modos_dibujado[1] = false;

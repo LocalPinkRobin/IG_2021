@@ -23,17 +23,14 @@ class Malla3D
    public:
 
    // dibuja el objeto en modo inmediato
-   void draw_ModoInmediato();
-
-   void draw_Ajedrez();
-   // dibuja el objeto en modo diferido (usando VBOs)
-   void draw_ModoDiferido();
+   void draw_ModoInmediato(bool ajedrez);
+   void draw_ModoDiferido(bool ajedrez);
 
    // función que redibuja el objeto
    // está función llama a 'draw_ModoInmediato' (modo inmediato)
    // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)
 
-   void draw(int modo_dibujado) ; //0. modo inmediat, 1. modo diferido, 2. ajedrez
+   void draw(int modo_dibujado, bool ajedrez) ; //0. modo inmediat, 1. modo diferido
 
    Tupla3f getColorSolido();
    Tupla3f getColorPunto();
@@ -42,7 +39,7 @@ class Malla3D
    Tupla3f getColorAj2();
 
    //Colorear
-   void colorear(const Tupla3f color);
+   void colorear(int tipo);
 
    protected:
 
@@ -51,9 +48,17 @@ class Malla3D
    std::vector<Tupla3f> v ;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f ; // una terna de 3 enteros por cada cara o triángulo
    std::vector<Tupla3f> c ; //vector de colores
+   std::vector<Tupla3f> c_aj1 ; //vector de colores
+   std::vector<Tupla3f> c_aj2 ; //vector de colores
 
    GLuint id_vbo_ver = 0;
+   GLuint id_vbo_colores = 0;
+   GLuint id_vbo_colores_aj1 = 0;
+   GLuint id_vbo_colores_aj2 = 0;
+
    GLuint id_vbo_tri = 0;
+   GLuint id_vbo_tri_pares = 0;
+   GLuint id_vbo_tri_impares = 0;
 
    // completar: tabla de colores, tabla de normales de vértices
 

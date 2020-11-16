@@ -36,13 +36,16 @@ Tetraedro::Tetraedro(float lado)
    
    //Coloreado
    c.resize(v.size());  //Los colores cambian cada vez que dibujamos por si cambiamos la forma de visualizacion
-
+   c_aj1.resize(v.size());
+   c_aj2.resize(v.size());
+   
    color = {69/255.0, 245/255.0, 186/255.0};
    color_aj_1 = {1.0, 0.6, 0.8};
    color_aj_2 = {201/255.0, 181/255.0, 191/255.0};
    color_aristas = {1,0,0};
    color_vertices = {0,0,1};
 
-   colorear(color);
+   colorear(0);
+   colorear(3);
 }
 
