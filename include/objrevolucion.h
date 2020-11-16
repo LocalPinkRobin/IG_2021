@@ -34,14 +34,25 @@ public:
    ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, Eje ejeRotacion= Eje::EJEY) ;
    ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, Eje ejeRotacion = Eje::EJEY) ;
 
-   bool tapas ();
 
-private:
-    void crearMalla(std::vector<Tupla3f> perfil_original, int num_instancias);
-    void generarVertices(const std::string & archivo, int iteraciones,Eje ejeRotacion);
+
+protected:
+
+    Tupla3f v_superior, v_inferior;
+
+   bool mostrarTapas, tapaSuperior, tapaInferior;
+
+    void generarVertices(int iteraciones,Eje ejeRotacion);
     Tupla3f rotarVertice (Tupla3f vertice, double angulo, Eje ejeRotacion);
 
     void ordenaVerticesDecreciente(Eje ejeRotacion);
+    void generarTriangulos(int iteraciones);
+
+    std::vector<Tupla3f> vectorOriginal;
+
+    void crearMalla (const std::vector<Tupla3f> & perfil_original,
+                     const int num_instancias_perf,
+                     Eje ejeRotacion = Eje::EJEY);
 
 } ;
 

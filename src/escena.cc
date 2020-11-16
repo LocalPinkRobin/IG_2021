@@ -27,13 +27,16 @@ Escena::Escena()
     cubo = new Cubo(50);
     tetraedro = new Tetraedro(50);
     objetoply = new ObjPLY("./plys/beethoven.ply");
+    peon = new ObjRevolucion("./plys/peon.ply" , 50,false,true);
 
-    int num_obj = 3; // 0. Cubo 1. Tetraedro 2.Beethoven
+    int num_obj = 4; // 0. Cubo 1. Tetraedro 2.Beethoven
 
    visibilidad_objetos.resize(num_obj);
    visibilidad_objetos [0] = false;
    visibilidad_objetos [1] = false;
-   visibilidad_objetos [2] = true;
+   visibilidad_objetos [2] = false;
+   visibilidad_objetos [3] = true;
+
 
    modos_dibujado.resize(4); //0. Solido, 1. puntos, 2. rayas, 3. ajedrez
    modos_dibujado [0] = true;
@@ -133,6 +136,14 @@ void Escena::dibujarObjeto(GLenum modo){
 
    if (objetoply != nullptr && visibilidad_objetos[2]){
       objetoply->draw(modo_dibujado, modos_dibujado[3]);
+   }
+
+   if (peon != nullptr && visibilidad_objetos[3]){
+
+      glPushMatrix();
+         glScalef(20.0, 20.0, 20.0);
+         peon->draw(modo_dibujado, modos_dibujado[3]);
+      glPopMatrix();
    }
 
 
