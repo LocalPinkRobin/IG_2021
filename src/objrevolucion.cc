@@ -24,7 +24,7 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
     std::vector<Tupla3f> copiaVector;    
     ply::read_vertices(archivo, copiaVector);
 
-    crearMalla(copiaVector, num_instancias);
+    crearMalla(copiaVector, num_instancias,ejeRotacion);
 
 
     
@@ -39,7 +39,7 @@ ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> perfilOriginal, int num_instan
         
     tapaSuperior = tapa_sup;
     tapaInferior = tapa_inf;
-    crearMalla(perfilOriginal, num_instancias);
+    crearMalla(perfilOriginal, num_instancias, ejeRotacion);
     
 }
 
@@ -49,36 +49,48 @@ void ObjRevolucion::crearMalla (const std::vector<Tupla3f> & perfil_original,
     vectorOriginal = perfil_original;
     generarVertices(num_instancias_perf, ejeRotacion);
     generarTriangulos(num_instancias_perf);
-     c.resize(v.size());  //Los colores cambian cada vez que dibujamos por si cambiamos la forma de visualizacion
-   c_aj1.resize(v.size());
-   c_aj2.resize(v.size());
-   
-   color = {69/255.0, 245/255.0, 186/255.0};
-   color_aj_1 = {1.0, 0.6, 0.8};
-   color_aj_2 = {201/255.0, 181/255.0, 191/255.0};
-   color_aristas = {1,0,0};
-   color_vertices = {0,0,1};
+    
+    c.resize(v.size());  //Los colores cambian cada vez que dibujamos por si cambiamos la forma de visualizacion
+    c_aj1.resize(v.size());
+    c_aj2.resize(v.size());
+    
+    color = {69/255.0, 245/255.0, 186/255.0};
+    color_aj_1 = {1.0, 0.6, 0.8};
+    color_aj_2 = {201/255.0, 181/255.0, 191/255.0};
+    color_aristas = {1,0,0};
+    color_vertices = {0,0,1};
 
-   
-   colorear(0);
-   colorear(3);
+    
+    colorear(0);
+    colorear(3);
 }
 
 Tupla3f ObjRevolucion::rotarVertice (Tupla3f vertice, double angulo, Eje ejeRotacion){
 
     Tupla3f resultado = vertice;
 
+
     if(ejeRotacion == Eje::EJEX){
+                resultado[0]= vertice[0];
+    //std::cout << "EJE X" << std::endl;
         resultado[1] = cos(angulo) * vertice[1] - sin(angulo) * vertice[2];
-        resultado[2] = cos(angulo) * vertice[1] + sin(angulo) * vertice[2];
+        resultado[2] = sin(angulo) * vertice[1] + cos(angulo) * vertice[2];
     } else if (ejeRotacion == Eje::EJEY){
+            //std::cout << "EJE Y" << std::endl;
+
         resultado[0] = cos(angulo) * vertice[0] + sin(angulo) * vertice [2];
+        resultado[1]= vertice[1];
         resultado[2] = -sin(angulo)* vertice[0] + cos(angulo) * vertice [2];
     } else if (ejeRotacion == Eje::EJEZ){
         resultado[0] = cos(angulo) * vertice[0] - sin(angulo) * vertice[1];
-        resultado[1] = cos(angulo) * vertice[0] + sin(angulo) * vertice[1];
+        resultado[1] = sin(angulo) * vertice[0] + cos(angulo) * vertice[1];
     }
-
+    /*
+    std::cout << "VERTICES ORIGINALES" << std::endl;
+    std::cout << vertice[0] << "       " << vertice[1] << "        " << vertice[2] << std::endl;
+    std::cout << "VERTICES ROTADOS" << std::endl;
+    std::cout << resultado[0] << "       " << resultado[1] << "        " << resultado[2] << std::endl;
+    */
     return (resultado);
 
 }
@@ -159,8 +171,7 @@ void ObjRevolucion::generarVertices( int iteraciones, Eje ejeRotacion){
         }
        
     }
-    
-    
+    std::cout << vectorOriginal.size() << std::endl;
     //Generamos y rotamos
     Tupla3f generado;
     for (int i = 0; i < iteraciones; i++){

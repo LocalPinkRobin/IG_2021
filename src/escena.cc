@@ -27,15 +27,24 @@ Escena::Escena()
     cubo = new Cubo(50);
     tetraedro = new Tetraedro(50);
     objetoply = new ObjPLY("./plys/beethoven.ply");
-    peon = new ObjRevolucion("./plys/peon.ply" , 50,false,true);
+    peon = new ObjRevolucion("./plys/peon.ply", 50,false,true,Eje::EJEX);
+    cono = new Cono(50,20,50,Eje::EJEX);
+    bola = new Esfera(25, 50,50);
+    cilindro = new Cilindro( 50, 25, 50,true, true, Eje::EJEZ);
 
-    int num_obj = 4; // 0. Cubo 1. Tetraedro 2.Beethoven
+
+    int num_obj = 7; // 0. Cubo 1. Tetraedro 2.Beethoven 3. peon 4. cilindro 5.Cono 6.Bola
 
    visibilidad_objetos.resize(num_obj);
    visibilidad_objetos [0] = false;
    visibilidad_objetos [1] = false;
    visibilidad_objetos [2] = false;
-   visibilidad_objetos [3] = true;
+   visibilidad_objetos [3] = false;
+   visibilidad_objetos [4] = false;
+   visibilidad_objetos [5] = false;
+   visibilidad_objetos [6] = true;
+
+
 
 
    modos_dibujado.resize(4); //0. Solido, 1. puntos, 2. rayas, 3. ajedrez
@@ -110,28 +119,55 @@ void Escena::dibujar()
 }
 
 void Escena::dibujarObjeto(GLenum modo){
+   int num_dibujado;
 
    if (modo == GL_FILL){
-      cubo->colorear(0);
-      tetraedro->colorear(0);
-      objetoply->colorear(0);
+      num_dibujado = 0;
+
    } else if (modo == GL_POINT){
-      cubo->colorear(1);
-      tetraedro->colorear(1); 
-      objetoply->colorear(1);      
+      num_dibujado = 1;
+
    } else if (modo == GL_LINE){
       
-      cubo->colorear(2);
-      tetraedro->colorear(2);   
-      objetoply->colorear(2); 
+      num_dibujado = 2;
+   }
+   
+   if (cubo != nullptr){
+      cubo->colorear(num_dibujado);
+   }
+   if (tetraedro != nullptr){
+      tetraedro->colorear(num_dibujado);
+   }
+   if (objetoply != nullptr){
+      objetoply->colorear(num_dibujado);
+   }
+   if (peon != nullptr){
+      peon -> colorear(num_dibujado);
+   }
+   if (cilindro != nullptr){
+      cilindro-> colorear(num_dibujado);
+   }
+   if (cono != nullptr){
+      cono -> colorear(num_dibujado);
+   }
+   if (bola != nullptr){
+      bola-> colorear(num_dibujado);
    }
 
    if (cubo != nullptr && visibilidad_objetos[0]){
-      cubo->draw(modo_dibujado, modos_dibujado[3]);
+      glPushMatrix();
+         glTranslatef(100.0,0.0, 0.0);
+         cubo->draw(modo_dibujado, modos_dibujado[3]);
+      glPopMatrix();
+
    }
 
    if (tetraedro != nullptr && visibilidad_objetos[1]){
-      tetraedro->draw(modo_dibujado, modos_dibujado[3]);
+      glPushMatrix();
+         glTranslatef(-100.0,0.0, 0.0);
+         tetraedro->draw(modo_dibujado, modos_dibujado[3]);
+      glPopMatrix();
+
    }
 
    if (objetoply != nullptr && visibilidad_objetos[2]){
@@ -144,6 +180,18 @@ void Escena::dibujarObjeto(GLenum modo){
          glScalef(20.0, 20.0, 20.0);
          peon->draw(modo_dibujado, modos_dibujado[3]);
       glPopMatrix();
+   }
+
+   if (cilindro != nullptr && visibilidad_objetos[4]){
+         cilindro->draw(modo_dibujado, modos_dibujado[3]);
+   }
+
+   if (cono != nullptr && visibilidad_objetos[5]){
+         cono->draw(modo_dibujado, modos_dibujado[3]);
+   }
+   
+   if (bola != nullptr && visibilidad_objetos[6]){
+         bola->draw(modo_dibujado, modos_dibujado[3]);
    }
 
 
@@ -177,6 +225,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          cout << "Modo seleccion objeto" << endl;
          cout << "C --> Visualizar/ocultar Cubo" << endl
               << "T --> Visualizar/ocultar Tetraedro"<< endl
+              << "Y --> Visualizar/ocultar ObjetoPly" << endl
+              << "W --> Visualizar/ocultar objeto de revolucion" << endl
+              << "R --> Visualizar/ocultar Cilindro"<< endl
+              << "N --> Visualizar/ocultar Cono"<< endl
+              << "E --> Visualizar/ocultar Esfera"<< endl
               << "Q --> Quitar modo seleccion de objeto" << endl;
          break ;
       case 'C':
@@ -188,6 +241,36 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case 'T':
          if(modoMenu == SELOBJETO){
             visibilidad_objetos[1] = !visibilidad_objetos[1];
+         }
+         break ;
+
+         case 'Y':
+         if(modoMenu == SELOBJETO){
+            visibilidad_objetos[2] = !visibilidad_objetos[2];
+         }
+         break ;
+
+         case 'W':
+         if(modoMenu == SELOBJETO){
+            visibilidad_objetos[3] = !visibilidad_objetos[3];
+         }
+         break ;
+
+         case 'R':
+         if(modoMenu == SELOBJETO){
+            visibilidad_objetos[4] = !visibilidad_objetos[4];
+         }
+         break ;
+
+         case 'N':
+         if(modoMenu == SELOBJETO){
+            visibilidad_objetos[5] = !visibilidad_objetos[5];
+         }
+         break ;
+
+         case 'E':
+         if(modoMenu == SELOBJETO){
+            visibilidad_objetos[6] = !visibilidad_objetos[6];
          }
          break ;
       case 'V' :

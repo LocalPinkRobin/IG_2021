@@ -7,6 +7,10 @@
 #include "tetraedro.h"
 #include "objply.h"
 #include "objrevolucion.h"
+#include "cilindro.h"
+#include "cono.h"
+#include "esfera.h"
+
 
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
@@ -43,6 +47,9 @@ class Escena
    Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
    ObjPLY * objetoply = nullptr;
    ObjRevolucion * peon = nullptr;
+   Cilindro * cilindro = nullptr;
+   Cono * cono = nullptr;
+   Esfera * bola = nullptr;
    
    std::vector<bool> visibilidad_objetos;
    std::vector<bool> modos_dibujado;

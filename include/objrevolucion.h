@@ -40,7 +40,7 @@ protected:
 
     Tupla3f v_superior, v_inferior;
 
-   bool mostrarTapas, tapaSuperior, tapaInferior;
+    bool mostrarTapas, tapaSuperior, tapaInferior;
 
     void generarVertices(int iteraciones,Eje ejeRotacion);
     Tupla3f rotarVertice (Tupla3f vertice, double angulo, Eje ejeRotacion);
