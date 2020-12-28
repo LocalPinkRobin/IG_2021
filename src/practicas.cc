@@ -153,7 +153,9 @@ int main( int argc, char **argv )
    escena->inicializar( UI_window_width, UI_window_height );
 
 
-
+cout << "V --> Entrar en modo visualización" << endl
+     << "O --> Entrar en modo seleccion objeto" << endl
+    <<  "D --> Entrar en modo de dibujado"<< endl;
    // ejecutar del bucle de eventos
    glutMainLoop();
 

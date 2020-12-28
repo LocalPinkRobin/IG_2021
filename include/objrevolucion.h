@@ -30,13 +30,19 @@ enum class Eje {
 
 class ObjRevolucion : public Malla3D {
 public:
-   ObjRevolucion();
-   ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, Eje ejeRotacion= Eje::EJEY) ;
-   ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, Eje ejeRotacion = Eje::EJEY) ;
-
-
+    ObjRevolucion();
+    ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, Eje ejeRotacion= Eje::EJEY) ;
+    ObjRevolucion(std::vector<Tupla3f> archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, Eje ejeRotacion = Eje::EJEY) ;
+    void dibujar_tapas (bool dibujar);
+    bool getMostrarTapas();
 
 protected:
+    int iteraciones;
+
+    bool mostrar_tapas = true;
+
+    virtual void pintar_diferido( const std::vector<Tupla3i> & caras, bool ajedrez);
+    virtual void pintar_inmediato(const std::vector<Tupla3i> & caras, bool ajedrez);
 
     Tupla3f v_superior, v_inferior;
 

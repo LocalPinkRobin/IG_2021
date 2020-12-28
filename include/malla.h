@@ -44,9 +44,12 @@ class Malla3D
    protected:
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
+   virtual void pintar_diferido( const std::vector<Tupla3i> & caras, bool ajedrez);
+   virtual void pintar_inmediato( const std::vector<Tupla3i> & caras, bool ajedrez);
 
    std::vector<Tupla3f> v ;   // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f ; // una terna de 3 enteros por cada cara o triángulo
+   std::vector<Tupla3f> nv; //tupla de 3 reales que representa el vector perpendicular a la superficie de la malla en el vertice
    std::vector<Tupla3f> c ; //vector de colores
    std::vector<Tupla3f> c_aj1 ; //vector de colores
    std::vector<Tupla3f> c_aj2 ; //vector de colores

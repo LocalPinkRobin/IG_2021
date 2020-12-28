@@ -21,7 +21,14 @@ GLuint CrearVBO (GLuint tipo_vbo, GLuint tamanio_bytes, GLvoid * puntero_ram){
    return id_vbo;
 }
 
+void Malla3D::pintar_diferido( const std::vector<Tupla3i> & caras, bool ajedrez){
+   glDrawElements (GL_TRIANGLES, 3*caras.size(), GL_UNSIGNED_INT, 0);
 
+}
+
+void Malla3D::pintar_inmediato( const std::vector<Tupla3i> & caras, bool ajedrez){
+   glDrawElements (GL_TRIANGLES, caras.size()*3, GL_UNSIGNED_INT, caras.data());
+}
 // Visualización en modo inmediato con 'glDrawElements'
 
 void Malla3D::draw_ModoInmediato(bool ajedrez)
@@ -43,7 +50,7 @@ void Malla3D::draw_ModoInmediato(bool ajedrez)
       // visualizar, indicando: tipo de primitiva, número de índices,
       // tipo de los índices, y dirección de la tabla de índices
 
-      glDrawElements (GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
+      pintar_inmediato(f, ajedrez);
    } else{
       
          std::vector<Tupla3i> caras_pares;
@@ -57,27 +64,23 @@ void Malla3D::draw_ModoInmediato(bool ajedrez)
             }
          }
 
-         glVertexPointer(3,GL_FLOAT, 0, v.data());
+         glVertexPointer(3, GL_FLOAT, 0, v.data());
 
          glColorPointer(3, GL_FLOAT, 0, c_aj1.data());
 
          // visualizar, indicando: tipo de primitiva, número de índices,
          // tipo de los índices, y dirección de la tabla de índices
 
-         glDrawElements (GL_TRIANGLES, caras_pares.size()*3, GL_UNSIGNED_INT, caras_pares.data());
-
+         pintar_inmediato(caras_pares,ajedrez);
          glColorPointer(3, GL_FLOAT, 0, c_aj2.data());
-         glDrawElements (GL_TRIANGLES, caras_impares.size()*3, GL_UNSIGNED_INT, caras_impares.data());
+         pintar_inmediato(caras_impares, ajedrez);
 
    }
    
    //deshabilitar array de vertices
 
    glDisableClientState(GL_COLOR_ARRAY);
-   
    glDisableClientState(GL_VERTEX_ARRAY);
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -86,15 +89,16 @@ void Malla3D::draw_ModoInmediato(bool ajedrez)
 void Malla3D::draw_ModoDiferido(bool ajedrez)
 {
    //Vertices
+   glEnableClientState (GL_VERTEX_ARRAY);
+   glEnableClientState (GL_COLOR_ARRAY);
 
    if (id_vbo_ver == 0){
-      id_vbo_ver = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, f.size() * 3 * sizeof(int) , v.data() );    
+      id_vbo_ver = CrearVBO(GL_ARRAY_BUFFER, v.size() * 3 * sizeof(float) , v.data() );    
    }
 
    glBindBuffer(GL_ARRAY_BUFFER, id_vbo_ver);
    glVertexPointer (3, GL_FLOAT, 0, 0);
    glBindBuffer (GL_ARRAY_BUFFER, 0);
-   glEnableClientState(GL_VERTEX_ARRAY);
 
    if(!ajedrez){
       //Triangulos
@@ -103,15 +107,16 @@ void Malla3D::draw_ModoDiferido(bool ajedrez)
          id_vbo_tri = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, f.size() * 3 * sizeof(int) , f.data() );
       }
 
-      if (id_vbo_colores == 0){
-         id_vbo_colores = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, c.size() * 3 * sizeof(int) , c.data() );
-      }
+      
+      id_vbo_colores = CrearVBO(GL_ARRAY_BUFFER, c.size() * 3 * sizeof(float) , c.data() );
+      
    
       glBindBuffer(GL_ARRAY_BUFFER, id_vbo_colores);
       glColorPointer(3, GL_FLOAT, 0, 0);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
 
       glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, id_vbo_tri);
-      glDrawElements (GL_TRIANGLES, 3*f.size(), GL_UNSIGNED_INT, 0);
+      pintar_diferido(f, ajedrez);
       glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
 
    } else{
@@ -135,18 +140,18 @@ void Malla3D::draw_ModoDiferido(bool ajedrez)
       }
   
       if (id_vbo_colores_aj1 == 0){
-         id_vbo_colores_aj1 = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, c_aj1.size() * 3 * sizeof(int) , c_aj1.data() );
+         id_vbo_colores_aj1 = CrearVBO(GL_ARRAY_BUFFER, c_aj1.size() * 3 * sizeof(float) , c_aj1.data() );
       }
 
       if (id_vbo_colores_aj2 == 0){
-         id_vbo_colores_aj2 = CrearVBO(GL_ELEMENT_ARRAY_BUFFER, c_aj2.size() * 3 * sizeof(int) , c_aj2.data() );
+         id_vbo_colores_aj2 = CrearVBO(GL_ARRAY_BUFFER, c_aj2.size() * 3 * sizeof(float) , c_aj2.data() );
       }
 
          
       glBindBuffer(GL_ARRAY_BUFFER, id_vbo_colores_aj1);
       glColorPointer(3, GL_FLOAT, 0, 0);
       glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, id_vbo_tri_pares);
-      glDrawElements (GL_TRIANGLES, 3*caras_pares.size(), GL_UNSIGNED_INT, 0);
+      pintar_diferido(caras_pares, ajedrez);
       glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
@@ -154,18 +159,55 @@ void Malla3D::draw_ModoDiferido(bool ajedrez)
       glBindBuffer(GL_ARRAY_BUFFER, id_vbo_colores_aj2);
       glColorPointer(3, GL_FLOAT, 0, 0);
       glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, id_vbo_tri_impares);
-      glDrawElements (GL_TRIANGLES, 3*caras_impares.size(), GL_UNSIGNED_INT, 0);
+      pintar_diferido(caras_impares, ajedrez);
       glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
+   }
 
+   glDisableClientState(GL_COLOR_ARRAY);
+   glDisableClientState(GL_VERTEX_ARRAY);
+}
+//------------------------------------------------------------------------------
+void Malla3D::calcular_normales(){
+   Tupla3f vA;
+   Tupla3f vB;
 
+   Tupla3f perpendicular;
+   Tupla3f normal;
+
+   nv.resize(v.size());
+
+   for (auto it = nv.begin(); it != nv.end(); ++it){
+      (*it) = {0, 0, 0};
+   }
+
+   for (auto it = f.begin(); it != f.end(); ++it){
+      vA = v.at((*it)(1)) - v.at((*it)(0)) ;
+      vB = v.at((*it)(2)) - v.at((*it)(0)) ;
+   
+
+   // calculo el producto vectorial para hallar la perpendicular
+   // y lo normalizamos
+   
+
+   perpendicular = vA.cross(vB);
+
+	if (perpendicular.lengthSq() > 0)
+      
+      normal = perpendicular.normalized();
+
+      nv[(*it)(0)] = nv[(*it)(0)] + normal;
+      nv[(*it)(1)] = nv[(*it)(1)] + normal;
+      nv[(*it)(2)] = nv[(*it)(2)] + normal;
 
    }
 
-   glDisableClientState(GL_VERTEX_ARRAY);
-
-
-
+   for (auto it = nv.begin(); it != nv.end(); ++it){
+      if ((*it).lengthSq() > 0)
+         (*it) = (*it).normalized();
+   }
 }
+
+
 // -----------------------------------------------------------------------------
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido

@@ -52,7 +52,7 @@ class Escena
    Esfera * bola = nullptr;
    
    std::vector<bool> visibilidad_objetos;
-   std::vector<bool> modos_dibujado;
+   std::vector<bool> visualizacion_dibujado;
 
 
 

@@ -25,7 +25,7 @@ Tetraedro::Tetraedro(float lado)
     
    // inicializar la tabla de caras o triángulos:
 
-   f.resize(12);
+   f.resize(4);
 
    f[0] = {3, 2, 1};
    f[1] = {0, 3, 1};

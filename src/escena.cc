@@ -27,31 +27,31 @@ Escena::Escena()
     cubo = new Cubo(50);
     tetraedro = new Tetraedro(50);
     objetoply = new ObjPLY("./plys/beethoven.ply");
-    peon = new ObjRevolucion("./plys/peon.ply", 50,false,true,Eje::EJEX);
+    peon = new ObjRevolucion("./plys/peon.ply", 50,true,true,Eje::EJEY);
     cono = new Cono(50,20,50,Eje::EJEX);
-    bola = new Esfera(25, 50,50);
+    bola = new Esfera(25, 50,50, true, true);
     cilindro = new Cilindro( 50, 25, 50,true, true, Eje::EJEZ);
 
 
     int num_obj = 7; // 0. Cubo 1. Tetraedro 2.Beethoven 3. peon 4. cilindro 5.Cono 6.Bola
 
    visibilidad_objetos.resize(num_obj);
-   visibilidad_objetos [0] = false;
+   visibilidad_objetos [0] = true;
    visibilidad_objetos [1] = false;
    visibilidad_objetos [2] = false;
    visibilidad_objetos [3] = false;
    visibilidad_objetos [4] = false;
    visibilidad_objetos [5] = false;
-   visibilidad_objetos [6] = true;
+   visibilidad_objetos [6] = false;
 
 
 
 
-   modos_dibujado.resize(4); //0. Solido, 1. puntos, 2. rayas, 3. ajedrez
-   modos_dibujado [0] = true;
-   modos_dibujado [1] = false;
-   modos_dibujado [2] = false;
-   modos_dibujado [3] = false;
+   visualizacion_dibujado.resize(4); //0. Solido, 1. puntos, 2. rayas, 3. ajedrez, 4. Luz suave, 5. Luz plana
+   visualizacion_dibujado [0] = true;
+   visualizacion_dibujado [1] = false;
+   visualizacion_dibujado [2] = false;
+   visualizacion_dibujado [3] = false;;
 
    modo_dibujado = 0;
 
@@ -95,23 +95,23 @@ void Escena::dibujar()
     //   Dibujar los diferentes elementos de la escena
     // Habrá que tener en esta primera práctica una variable que indique qué objeto se ha de visualizar
     // y hacer 
-    if(modos_dibujado[0]){
+    if(visualizacion_dibujado[0]){
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       dibujarObjeto(GL_FILL);
       
     }
 
-    if (modos_dibujado[1]){
+    if (visualizacion_dibujado[1]){
       glPointSize(6);
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
       dibujarObjeto(GL_POINT);
     }
 
-   if (modos_dibujado[2]){
+   if (visualizacion_dibujado[2]){
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
       dibujarObjeto(GL_LINE);
    }
-   if (modos_dibujado[3]){
+   if (visualizacion_dibujado[3]){
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       dibujarObjeto(GL_FILL);
    }
@@ -157,7 +157,7 @@ void Escena::dibujarObjeto(GLenum modo){
    if (cubo != nullptr && visibilidad_objetos[0]){
       glPushMatrix();
          glTranslatef(100.0,0.0, 0.0);
-         cubo->draw(modo_dibujado, modos_dibujado[3]);
+         cubo->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
 
    }
@@ -165,33 +165,33 @@ void Escena::dibujarObjeto(GLenum modo){
    if (tetraedro != nullptr && visibilidad_objetos[1]){
       glPushMatrix();
          glTranslatef(-100.0,0.0, 0.0);
-         tetraedro->draw(modo_dibujado, modos_dibujado[3]);
+         tetraedro->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
 
    }
 
    if (objetoply != nullptr && visibilidad_objetos[2]){
-      objetoply->draw(modo_dibujado, modos_dibujado[3]);
+      objetoply->draw(modo_dibujado, visualizacion_dibujado[3]);
    }
 
    if (peon != nullptr && visibilidad_objetos[3]){
 
       glPushMatrix();
          glScalef(20.0, 20.0, 20.0);
-         peon->draw(modo_dibujado, modos_dibujado[3]);
+         peon->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
    }
 
    if (cilindro != nullptr && visibilidad_objetos[4]){
-         cilindro->draw(modo_dibujado, modos_dibujado[3]);
+         cilindro->draw(modo_dibujado, visualizacion_dibujado[3]);
    }
 
    if (cono != nullptr && visibilidad_objetos[5]){
-         cono->draw(modo_dibujado, modos_dibujado[3]);
+         cono->draw(modo_dibujado, visualizacion_dibujado[3]);
    }
    
    if (bola != nullptr && visibilidad_objetos[6]){
-         bola->draw(modo_dibujado, modos_dibujado[3]);
+         bola->draw(modo_dibujado, visualizacion_dibujado[3]);
    }
 
 
@@ -213,8 +213,12 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    switch( toupper(tecla) )
    {
       case 'Q' :
-         if (modoMenu!=NADA)
+         if (modoMenu!=NADA) {
             modoMenu=NADA;            
+            cout << "V --> Entrar en modo visualización" << endl
+                 << "O --> Entrar en modo seleccion objeto" << endl
+                 << "D --> Entrar en modo de dibujado"<< endl;
+            }
          else {
             salir=true ;
          }
@@ -241,6 +245,20 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case 'T':
          if(modoMenu == SELOBJETO){
             visibilidad_objetos[1] = !visibilidad_objetos[1];
+         } else if(modoMenu == SELVISUALIZACION) {
+            
+            if (peon != nullptr){
+               peon ->dibujar_tapas(!peon->getMostrarTapas());
+            }
+            if (cilindro != nullptr){
+               cilindro->dibujar_tapas(!cilindro->getMostrarTapas());
+            }
+            if (cono != nullptr){
+               cono -> dibujar_tapas(!cono->getMostrarTapas());
+            }
+            if (bola != nullptr){
+               bola-> dibujar_tapas(!bola->getMostrarTapas());
+            }
          }
          break ;
 
@@ -278,9 +296,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          modoMenu=SELVISUALIZACION;
          cout << "Modo visualizacion" << endl;
          cout << "P --> Modo puntos" << endl
-              << "L --> Modo lineas"<< endl
-              << "S --> Modo solido"<< endl
-              << "A --> Modo Ajedrez"<< endl
+              << "L --> Modo lineas" << endl
+              << "S --> Modo solido" << endl
+              << "A --> Modo Ajedrez" << endl
+              << "V --> Modo luz suave" << endl
+              << "P --> Modo luz plano" << endl
               << "Q --> Quitar modo seleccion de visualizacion" << endl;
 
          break ;
@@ -308,10 +328,12 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break;
          case 'A':
             if (modoMenu == SELVISUALIZACION){
-               modos_dibujado[3] = true;
-               modos_dibujado[0] = false;
-               modos_dibujado[1] = false;
-               modos_dibujado[2] = false;
+               visualizacion_dibujado[3] = true;
+               visualizacion_dibujado[0] = false;
+               visualizacion_dibujado[1] = false;
+               visualizacion_dibujado[2] = false;
+               visualizacion_dibujado[4] = false;
+               visualizacion_dibujado[5] = false;
 
                cout << "Dibujando en modo ajedrez";
             }
@@ -319,25 +341,22 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          // COMPLETAR con los diferentes opciones de teclado
       case 'P': //MODO PUNTOS
          if(modoMenu == SELVISUALIZACION){
-            modo_dibujado = 0;
-            modos_dibujado[1] = !modos_dibujado[1];
-            modos_dibujado[3] = false;
+            visualizacion_dibujado[1] = !visualizacion_dibujado[1];
+            visualizacion_dibujado[3] = false;
             cout << "Actualizado modo punto" << endl;
          }
          break;
       case 'L': //MODO LINEAS
          if(modoMenu == SELVISUALIZACION){
-            modo_dibujado = 0;
-            modos_dibujado[2] = !modos_dibujado[2];
-            modos_dibujado[3] = false;
+            visualizacion_dibujado[2] = !visualizacion_dibujado[2];
+            visualizacion_dibujado[3] = false;
             cout << "Actualizado modo linea" << endl;
          }      
          break;
       case 'S': //MODO SOLIDO
          if(modoMenu == SELVISUALIZACION){
-            modo_dibujado = 0;
-            modos_dibujado[0] = !modos_dibujado[0];
-            modos_dibujado[3] = false;
+            visualizacion_dibujado[0] = !visualizacion_dibujado[0];
+            visualizacion_dibujado[3] = false;
             cout << "Actualizado modo solido" << endl;
 
          }
