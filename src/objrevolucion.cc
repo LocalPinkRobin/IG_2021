@@ -115,6 +115,7 @@ void ObjRevolucion::crearMalla (const std::vector<Tupla3f> & perfil_original,
     vectorOriginal = perfil_original;
     generarVertices(num_instancias_perf, ejeRotacion);
     generarTriangulos(num_instancias_perf);
+    calcular_normales();
     
 }
 

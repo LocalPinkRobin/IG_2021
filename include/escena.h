@@ -10,6 +10,8 @@
 #include "cilindro.h"
 #include "cono.h"
 #include "esfera.h"
+#include "luz_direccional.h"
+#include "luz_posicional.h"
 
 
 
@@ -50,9 +52,17 @@ class Escena
    Cilindro * cilindro = nullptr;
    Cono * cono = nullptr;
    Esfera * bola = nullptr;
+
+   LuzPosicional * posicional = nullptr;
+   LuzDireccional * direccional = nullptr;
+
+   GLenum sombreado = GL_SMOOTH;
+   
    
    std::vector<bool> visibilidad_objetos;
    std::vector<bool> visualizacion_dibujado;
+
+
 
 
 

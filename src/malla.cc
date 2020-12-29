@@ -39,6 +39,11 @@ void Malla3D::draw_ModoInmediato(bool ajedrez)
    glEnableClientState (GL_VERTEX_ARRAY);
    glEnableClientState (GL_COLOR_ARRAY);
 
+   if(glIsEnabled(GL_LIGHTING)){
+      glEnableClientState (GL_NORMAL_ARRAY);
+      glNormalPointer(GL_FLOAT,0,nv.data());
+   }
+
    if (!ajedrez)   {
 
       //Indicamos el formato y la direccion de memoria del array de vertices

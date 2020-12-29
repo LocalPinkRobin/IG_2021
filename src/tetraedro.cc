@@ -39,6 +39,8 @@ Tetraedro::Tetraedro(float lado)
    c_aj1.resize(v.size());
    c_aj2.resize(v.size());
    
+   calcular_normales();
+   
    color = {69/255.0, 245/255.0, 186/255.0};
    color_aj_1 = {1.0, 0.6, 0.8};
    color_aj_2 = {201/255.0, 181/255.0, 191/255.0};

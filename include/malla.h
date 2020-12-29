@@ -10,6 +10,7 @@
 #ifndef MALLA3D_H_INCLUDED
 #define MALLA3D_H_INCLUDED
 
+#include "material.h"
 #include "aux.h"
 
 // *****************************************************************************
@@ -40,6 +41,8 @@ class Malla3D
 
    //Colorear
    void colorear(int tipo);
+   
+   void setMaterial (Material m);
 
    protected:
 

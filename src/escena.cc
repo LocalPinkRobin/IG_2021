@@ -47,13 +47,21 @@ Escena::Escena()
 
 
 
-   visualizacion_dibujado.resize(4); //0. Solido, 1. puntos, 2. rayas, 3. ajedrez, 4. Luz suave, 5. Luz plana
+   visualizacion_dibujado.resize(4); //0. Solido, 1. puntos, 2. rayas, 3. ajedrez
    visualizacion_dibujado [0] = true;
    visualizacion_dibujado [1] = false;
    visualizacion_dibujado [2] = false;
    visualizacion_dibujado [3] = false;;
 
    modo_dibujado = 0;
+
+   Tupla3f posicion = {100,100,100};
+   Tupla4f difuso = {1, 0, 64/255.0, 1};
+   Tupla4f especular = {1,0,0,1};
+   Tupla4f ambiente = {0, 1, 128/255.0,1};
+
+
+   posicional = new LuzPosicional (posicion, GL_LIGHT0, ambiente, especular, difuso);
 
 }
 
@@ -90,6 +98,9 @@ void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
+   if(posicional != nullptr){
+      posicional->activar();
+   }
     ejes.draw();
     // COMPLETAR
     //   Dibujar los diferentes elementos de la escena
@@ -223,6 +234,18 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             salir=true ;
          }
          break ;
+
+      case 'X' :
+         if (glIsEnabled(GL_LIGHTING)){
+            if(sombreado == GL_SMOOTH){
+               sombreado = GL_FLAT;
+            } else{
+               sombreado = GL_SMOOTH;
+            }
+            glShadeModel(sombreado);
+         }
+      break ;
+
       case 'O' :
          // ESTAMOS EN MODO SELECCION DE OBJETO
          modoMenu=SELOBJETO;
@@ -293,17 +316,27 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          break ;
       case 'V' :
          // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
-         modoMenu=SELVISUALIZACION;
-         cout << "Modo visualizacion" << endl;
-         cout << "P --> Modo puntos" << endl
-              << "L --> Modo lineas" << endl
-              << "S --> Modo solido" << endl
-              << "A --> Modo Ajedrez" << endl
-              << "V --> Modo luz suave" << endl
-              << "P --> Modo luz plano" << endl
-              << "Q --> Quitar modo seleccion de visualizacion" << endl;
-
+         if(modoMenu == NADA){
+            modoMenu=SELVISUALIZACION;
+            cout << "Modo visualizacion" << endl;
+            cout << "P --> Modo puntos" << endl
+                 << "L --> Modo lineas" << endl
+                 << "S --> Modo solido" << endl
+                 << "A --> Modo Ajedrez" << endl
+                 << "I --> Activar/desactivar iluminacion" << endl
+                 << "Q --> Quitar modo seleccion de visualizacion" << endl;
+         }
          break ;
+       case 'I' :
+         if (modoMenu == SELVISUALIZACION){
+            if (glIsEnabled(GL_LIGHTING)){
+               glDisable(GL_LIGHTING);
+            } else {
+               glEnable(GL_LIGHTING);
+            }
+         }
+       break;
+       
        case 'D' :
          // ESTAMOS EN MODO SELECCION DE DIBUJADO
          modoMenu=SELDIBUJADO;
@@ -314,6 +347,16 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
          break ;
 
+         case '0':
+            if(glIsEnabled(GL_LIGHTING)){
+               if(glIsEnabled(GL_LIGHT0)){
+                  glDisable(GL_LIGHT0);
+               }else{
+                  glEnable(GL_LIGHT0);
+               }
+            }
+         break;
+         
          case '1':
          if( modoMenu==SELDIBUJADO ){
             modo_dibujado = 0;
@@ -344,21 +387,20 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             visualizacion_dibujado[1] = !visualizacion_dibujado[1];
             visualizacion_dibujado[3] = false;
             cout << "Actualizado modo punto" << endl;
-         }
+         } 
          break;
       case 'L': //MODO LINEAS
          if(modoMenu == SELVISUALIZACION){
             visualizacion_dibujado[2] = !visualizacion_dibujado[2];
             visualizacion_dibujado[3] = false;
             cout << "Actualizado modo linea" << endl;
-         }      
+         }
          break;
       case 'S': //MODO SOLIDO
          if(modoMenu == SELVISUALIZACION){
             visualizacion_dibujado[0] = !visualizacion_dibujado[0];
             visualizacion_dibujado[3] = false;
             cout << "Actualizado modo solido" << endl;
-
          }
          break;
 

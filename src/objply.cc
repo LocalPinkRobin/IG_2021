@@ -16,6 +16,8 @@ ObjPLY::ObjPLY( const std::string & nombre_archivo )
    c.resize(v.size());  //Los colores cambian cada vez que dibujamos por si cambiamos la forma de visualizacion
    c_aj1.resize(v.size());
    c_aj2.resize(v.size());
+
+   calcular_normales();
    
    color = {69/255.0, 245/255.0, 186/255.0};
    color_aj_1 = {1.0, 0.6, 0.8};

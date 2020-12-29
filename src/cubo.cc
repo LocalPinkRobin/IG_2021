@@ -45,6 +45,8 @@ Cubo::Cubo(float lado)
    f[11] = {6, 7, 4};
    // (es importante en cada cara ordenar los vértices en sentido contrario
    //  de las agujas del reloj, cuando esa cara se observa desde el exterior del cubo)
+
+   calcular_normales();
    
    c.resize(v.size());  //Los colores cambian cada vez que dibujamos por si cambiamos la forma de visualizacion
    c_aj1.resize(v.size());
