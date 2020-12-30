@@ -26,19 +26,18 @@ Escena::Escena()
 
     cubo = new Cubo(50);
     tetraedro = new Tetraedro(50);
-    objetoply = new ObjPLY("./plys/beethoven.ply");
+    objetoply = new ObjPLY("./plys/peach.ply");
     peon = new ObjRevolucion("./plys/peon.ply", 50,true,true,Eje::EJEY);
     cono = new Cono(50,20,50,Eje::EJEX);
     bola = new Esfera(25, 50,50, true, true);
     cilindro = new Cilindro( 50, 25, 50,true, true, Eje::EJEZ);
 
-
     int num_obj = 7; // 0. Cubo 1. Tetraedro 2.Beethoven 3. peon 4. cilindro 5.Cono 6.Bola
 
    visibilidad_objetos.resize(num_obj);
-   visibilidad_objetos [0] = true;
+   visibilidad_objetos [0] = false;
    visibilidad_objetos [1] = false;
-   visibilidad_objetos [2] = false;
+   visibilidad_objetos [2] = true;
    visibilidad_objetos [3] = false;
    visibilidad_objetos [4] = false;
    visibilidad_objetos [5] = false;
@@ -55,14 +54,29 @@ Escena::Escena()
 
    modo_dibujado = 0;
 
-   Tupla3f posicion = {100,100,100};
-   Tupla4f difuso = {1, 0, 64/255.0, 1};
-   Tupla4f especular = {1,0,0,1};
-   Tupla4f ambiente = {0, 1, 128/255.0,1};
+   Tupla3f posicion = {50,50,50};
+   Tupla4f difuso = {1,1,1, 1};
+   Tupla4f especular = {1,1,1,1};
+   Tupla4f ambiente = {1, 1, 1, 1};
 
 
    posicional = new LuzPosicional (posicion, GL_LIGHT0, ambiente, especular, difuso);
+   
+   direccional = new LuzDireccional(posicion, GL_LIGHT1,ambiente, especular, difuso);
 
+   Material caucho_blanco ({0.05, 0.05, 0.05,1},{0.05, 0.05, 0.05,1}, {0.07, 0.07, 0.07,1},0.078125*128.0f );
+   Material oro ({0.24725, 0.1995, 0.0745, 1}, {0.75164, 0.60648, 0.22648, 1}, {0.628281, 0.555802, 0.366065, 1}, 0.4*128.0f);
+   Material ruby({0.1745, 0.01175, 0.01175, 1}, {0.61424, 0.04136, 0.04136, 1}, {0.727811, 0.626959, 0.626959, 1}, 128.0f * 0.6f );
+   Material perla({0.25, 0.20725, 0.20725, 1}, {1, 0.829, 0.829, 1}, {0.296648, 0.296648, 0.296648, 1}, 128.0f * 0.088);
+   Material esmeralda({0.0215, 0.1745, 0.0215, 1}, {0.07568, 0.61424, 0.07568, 1}, {0.633, 0.727811,0.633, 1}, 0.6 * 128.0f);
+   Material plata({0.19225, 0.19225, 0.19225, 1}, {0.50754, 0.50754, 0.50754, 1}, {0.508273,0.508273, 0.508273, 1}, 0.4*128.0f);
+   Material turquesa({0.1, 0.18725, 0.1745, 1}, {0.396, 0.74151, 0.69102, 1}, {0.297254, 0.30829, 0.306678, 1} ,0.1 * 128.0f);
+
+   Material difuse({0.0f, 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 1.0f}, 128.0f);
+   Material specular({0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, 128.0f);
+
+   peon->setMaterial(esmeralda);
+   objetoply->setMaterial(oro);
 }
 
 //**************************************************************************
@@ -101,6 +115,11 @@ void Escena::dibujar()
    if(posicional != nullptr){
       posicional->activar();
    }
+
+   if(direccional != nullptr){
+      direccional->activar();
+   }
+
     ejes.draw();
     // COMPLETAR
     //   Dibujar los diferentes elementos de la escena
@@ -182,7 +201,12 @@ void Escena::dibujarObjeto(GLenum modo){
    }
 
    if (objetoply != nullptr && visibilidad_objetos[2]){
-      objetoply->draw(modo_dibujado, visualizacion_dibujado[3]);
+      glPushMatrix();
+         glTranslatef(100.0,0.0, 0.0);
+         glScalef(10.0, 10.0, 10.0);
+         objetoply->draw(modo_dibujado, visualizacion_dibujado[3]);
+      glPopMatrix();
+
    }
 
    if (peon != nullptr && visibilidad_objetos[3]){
@@ -333,6 +357,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                glDisable(GL_LIGHTING);
             } else {
                glEnable(GL_LIGHTING);
+               cout << "0 --> Iluminacion posicional" << endl 
+                    << "1 --> Iluminacion direccional" << endl
+                    << "A --> Variar ángulo Alfa" << endl 
+                    << "B --> Variar ángulo Beta" << endl;
+
             }
          }
        break;
@@ -361,6 +390,14 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          if( modoMenu==SELDIBUJADO ){
             modo_dibujado = 0;
             cout << "Dibujando en modo inmediato";
+         } else if (modoMenu==SELVISUALIZACION){
+            if(glIsEnabled(GL_LIGHTING)){
+               if(glIsEnabled(GL_LIGHT1)){
+                  glDisable(GL_LIGHT1);
+               }else{
+                  glEnable(GL_LIGHT1);
+               }
+            }
          }
          break;
          case '2':
@@ -379,8 +416,32 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                visualizacion_dibujado[5] = false;
 
                cout << "Dibujando en modo ajedrez";
+            } else if (modoMenu == NADA && glIsEnabled(GL_LIGHTING)){
+               modoMenu = V_ALFA;
             }
          break;
+      case 'B': //MODO PUNTOS
+         if (modoMenu == NADA && glIsEnabled(GL_LIGHTING)){
+               modoMenu = V_BETA;
+            }
+      break;
+
+      case '<':
+         if (modoMenu == V_ALFA) {
+            direccional->variarAnguloAlpha(-5*SEXA_TO_RAD);
+         } else if(modoMenu == V_BETA){
+            direccional->variarAnguloBeta(-5*SEXA_TO_RAD);
+         }
+      break;
+
+      case '>':
+         if (modoMenu == V_ALFA) {
+            direccional->variarAnguloAlpha(5*SEXA_TO_RAD);
+         } else if (modoMenu == V_BETA){
+            direccional->variarAnguloBeta(5*SEXA_TO_RAD);
+         }
+      break;
+
          // COMPLETAR con los diferentes opciones de teclado
       case 'P': //MODO PUNTOS
          if(modoMenu == SELVISUALIZACION){

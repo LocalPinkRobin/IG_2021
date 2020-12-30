@@ -42,9 +42,11 @@ class Malla3D
    //Colorear
    void colorear(int tipo);
    
-   void setMaterial (Material m);
+   void setMaterial (const Material & m);
 
    protected:
+
+   Material m;
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
    virtual void pintar_diferido( const std::vector<Tupla3i> & caras, bool ajedrez);
@@ -57,6 +59,7 @@ class Malla3D
    std::vector<Tupla3f> c_aj1 ; //vector de colores
    std::vector<Tupla3f> c_aj2 ; //vector de colores
 
+   GLuint id_vbo_nor = 0;
    GLuint id_vbo_ver = 0;
    GLuint id_vbo_colores = 0;
    GLuint id_vbo_colores_aj1 = 0;

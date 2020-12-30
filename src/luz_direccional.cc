@@ -46,4 +46,5 @@ void LuzDireccional::variarAnguloBeta(float incremento){
         beta = M_PI/2;
     }
 
+    recalcularPosicion();
 }

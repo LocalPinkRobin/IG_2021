@@ -39,7 +39,9 @@ void Malla3D::draw_ModoInmediato(bool ajedrez)
    glEnableClientState (GL_VERTEX_ARRAY);
    glEnableClientState (GL_COLOR_ARRAY);
 
+   
    if(glIsEnabled(GL_LIGHTING)){
+      m.aplicar();
       glEnableClientState (GL_NORMAL_ARRAY);
       glNormalPointer(GL_FLOAT,0,nv.data());
    }
@@ -96,9 +98,23 @@ void Malla3D::draw_ModoDiferido(bool ajedrez)
    //Vertices
    glEnableClientState (GL_VERTEX_ARRAY);
    glEnableClientState (GL_COLOR_ARRAY);
+   
+
+   
+   if(glIsEnabled(GL_LIGHTING) && id_vbo_nor == 0){
+      id_vbo_nor = CrearVBO(GL_ARRAY_BUFFER, nv.size() * 3 * sizeof(float) , nv.data() );    
+   }
 
    if (id_vbo_ver == 0){
       id_vbo_ver = CrearVBO(GL_ARRAY_BUFFER, v.size() * 3 * sizeof(float) , v.data() );    
+   }
+
+   if(glIsEnabled(GL_LIGHTING)){
+      m.aplicar();
+      glEnableClientState (GL_NORMAL_ARRAY);
+      glBindBuffer(GL_ARRAY_BUFFER, id_vbo_nor);
+      glNormalPointer (GL_FLOAT, 0, 0);
+      glBindBuffer (GL_ARRAY_BUFFER, 0);
    }
 
    glBindBuffer(GL_ARRAY_BUFFER, id_vbo_ver);
@@ -212,7 +228,9 @@ void Malla3D::calcular_normales(){
    }
 }
 
-
+void Malla3D::setMaterial (const Material & m){
+   this->m = m;
+}
 // -----------------------------------------------------------------------------
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido

@@ -13,7 +13,9 @@ class Material {
     public:
     Material();
     Material (Tupla4f ambiente, Tupla4f difuso, Tupla4f especular, float brillo);
+    
     void aplicar();
+    void operator = (const Material & otro);
     
 } ;
 

@@ -40,5 +40,7 @@
 
 bool comparaFloats(float a, float b, float epsilon = 0.00005f);
 
+#define SEXA_TO_RAD M_PI/180
+#define RAD_TO_SEXA 180/M_PI
 
 #endif // AUX_H_INCLUDED
