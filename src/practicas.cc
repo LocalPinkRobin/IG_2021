@@ -10,9 +10,14 @@
 #include "aux.h" // includes de OpenGL, windows, y librería std de C++
 #include "escena.h"
 
-// variable que contiene un puntero a la escena
 Escena *escena = nullptr ;
+// variable que contiene un puntero a la escena
 
+void funcion_idle(){
+   if (escena !=0)
+      escena -> animarModeloJerarquico();
+   glutPostRedisplay ();
+}
 
 //***************************************************************************
 // Funcion principal que redibuja la escena
@@ -137,6 +142,8 @@ int main( int argc, char **argv )
    // asignación de la funcion llamada "tecla_Especial" al evento correspondiente
    glutSpecialFunc( special_keys );
 
+   glutIdleFunc(funcion_idle);
+   
    // inicialización de librería GLEW (solo en Linux)
    #ifdef LINUX
    const GLenum codigoError = glewInit();

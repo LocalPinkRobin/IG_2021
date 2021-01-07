@@ -32,19 +32,20 @@ Escena::Escena()
     cilindro = new Cilindro( 50, 25, 50,true, true, Eje::EJEZ); 
     peon_blanco = new ObjRevolucion("./plys/peon.ply", 50,true,true,Eje::EJEY);
     peon_negro = new ObjRevolucion("./plys/peon.ply", 50,true,true,Eje::EJEY);
+    arcade = new Arcade ();
 
-
-    int num_obj = 8; // 0. peon 1. peon
+    int num_obj = 9; // 0. peon 1. peon
 
    visibilidad_objetos.resize(num_obj);
    visibilidad_objetos [0] = false;
    visibilidad_objetos [1] = false;
    visibilidad_objetos [2] = false;
-   visibilidad_objetos [3] = true;
+   visibilidad_objetos [3] = false;
    visibilidad_objetos [4] = false;
    visibilidad_objetos [5] = false;
    visibilidad_objetos [6] = false;
-   visibilidad_objetos [7] = true;
+   visibilidad_objetos [7] = false;
+   visibilidad_objetos [8] = true;
    
 
 
@@ -252,7 +253,12 @@ void Escena::dibujarObjeto(GLenum modo){
          bola->draw(modo_dibujado, visualizacion_dibujado[3]);
    }
 
+   if (arcade != nullptr && visibilidad_objetos[8]){
+      glPushMatrix();
+         arcade->draw(modo_dibujado, visualizacion_dibujado[3]);
+      glPopMatrix();
 
+   }
 }
 
 //**************************************************************************
@@ -585,4 +591,31 @@ void Escena::change_observer()
    glTranslatef( 0.0, 0.0, -Observer_distance );
    glRotatef( Observer_angle_y, 0.0 ,1.0, 0.0 );
    glRotatef( Observer_angle_x, 1.0, 0.0, 0.0 );
+}
+
+void Escena::animarModeloJerarquico(){
+   if(arcade!=nullptr && animacionAutomatica){
+      arcade->modificaRotacionY(rotacionPantalla);
+      
+      if(comparaFloats(arcade->getRotacionXJoystick(),arcade->getTopeRotacionJoystick())){
+         incrementoRotaXJoystick*= -1;
+      } else if (comparaFloats(arcade->getRotacionXJoystick(),-arcade->getTopeRotacionJoystick())){
+         incrementoRotaXJoystick*= -1;
+      }
+      arcade->inclinarPalancaX(incrementoRotaXJoystick);
+
+      if(comparaFloats(arcade->getRotacionZJoystick(),arcade->getTopeRotacionJoystick())){
+         incrementoRotaZJoystick*= -1;
+      } else if (comparaFloats(arcade->getRotacionZJoystick(),-arcade->getTopeRotacionJoystick())){
+         incrementoRotaZJoystick*= -1;
+      }
+      arcade->inclinarPalancaZ(incrementoRotaZJoystick);
+
+      if(comparaFloats(arcade->getExpansionJoystick(),arcade->getTopeSupExpansionJoystick())){
+         incrementoJoystick*= -1;
+      } else if (comparaFloats(arcade->getExpansionJoystick(),arcade->getTopeInfExpansionJoystick())){
+         incrementoJoystick*= -1;
+      }
+      arcade->modificarJoystick(incrementoJoystick);
+   }
 }

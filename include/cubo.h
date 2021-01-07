@@ -11,7 +11,7 @@
 #define CUBO_H_INCLUDED
 
 #include "aux.h"
-
+#include "malla.h"
 // *****************************************************************************
 //
 // clases derivadas de Malla3D (definen constructores específicos)
