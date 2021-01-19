@@ -263,6 +263,16 @@ void Malla3D::setColorSeleccion(Tupla3f color){
 Tupla3f Malla3D::getColorSolido(){
    return (color);
 }
+Material Malla3D::getMaterial(){
+   return m;
+}
+
+void Malla3D::setMaterialSeleccion(Material mat){
+   mat_seleccion = mat;
+}
+Material Malla3D::getMaterialSeleccion(){
+   return (mat_seleccion);
+}
 
 Tupla3f Malla3D::getColorSeleccion(){
    return(color_seleccion);

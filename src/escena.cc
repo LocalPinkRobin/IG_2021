@@ -29,7 +29,7 @@ Escena::Escena()
     tetraedro = new Tetraedro(50);
     tetraedro->setColorSeleccion({0,1,0});
     objetoply = new ObjPLY("./plys/peach.ply");
-    objetoply->setColorSeleccion({0,0,1});
+    objetoply->setColorSeleccion({1,51/255.0,133/255.0});
     cono = new Cono(50,20,50,Eje::EJEX);
     cono->setColorSeleccion({1,1,0});
     bola = new Esfera(25, 50,50, true, true);
@@ -37,9 +37,9 @@ Escena::Escena()
     cilindro = new Cilindro( 50, 25, 50,true, true, Eje::EJEZ);
     cilindro->setColorSeleccion({0,1,1}); 
     peon_blanco = new ObjRevolucion("./plys/peon.ply", 50,true,true,Eje::EJEY);
-    peon_blanco->setColorSeleccion({1,1,1});
+    peon_blanco->setColorSeleccion({0.8,0.8,0.8});
     peon_negro = new ObjRevolucion("./plys/peon.ply", 50,true,true,Eje::EJEY);
-    peon_negro->setColorSeleccion({0,0,0});
+    peon_negro->setColorSeleccion({0.2,0.2,0.2});
     arcade = new Arcade ();
 
     int num_obj = 9; // 0. peon 1. peon
@@ -86,9 +86,17 @@ Escena::Escena()
    Material difuse({0.0f, 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 1.0f}, 128.0f);
    Material specular({0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, 128.0f);
 
+   bola->setMaterial(oro);
+   cubo->setMaterial(turquesa);
    peon_negro->setMaterial(specular);
    peon_blanco->setMaterial(difuse);
    objetoply->setMaterial(oro_rosa);
+
+   bola->setMaterialSeleccion(ruby);
+   cubo->setMaterialSeleccion(ruby);
+   peon_negro->setMaterialSeleccion(ruby);
+   peon_blanco->setMaterialSeleccion(ruby);
+   objetoply->setMaterialSeleccion(ruby);
 
     Tupla3f eye = {0, 100, 200};
 	 Tupla3f at = {0, 0, 0};
@@ -246,29 +254,46 @@ void Escena::dibujarObjeto(GLenum modo){
       bola-> colorear(num_dibujado);
    }
 
+   Material tmp;
    if(camaras[camara_actual].getSeleccion() == CUBO){
       cubo->colorear(4);
-   }
-   if(camaras[camara_actual].getSeleccion() == TETRAEDRO){
+      tmp = cubo->getMaterial();
+      cubo->setMaterial(cubo->getMaterialSeleccion());
+
+   }else if(camaras[camara_actual].getSeleccion() == TETRAEDRO){
       tetraedro->colorear(4);
-   }
-   if(camaras[camara_actual].getSeleccion() == OBJPLY){
-      tetraedro->colorear(4);
-   }
-   if(camaras[camara_actual].getSeleccion() == CONO){
+      tmp = tetraedro->getMaterial();
+      tetraedro->setMaterial(tetraedro->getMaterialSeleccion());
+
+   }else if(camaras[camara_actual].getSeleccion() == OBJPLY){
+      objetoply->colorear(4);
+      tmp = objetoply->getMaterial();
+      objetoply->setMaterial(objetoply->getMaterialSeleccion());
+
+   }else if(camaras[camara_actual].getSeleccion() == CONO){
       cono->colorear(4);
-   }
-   if(camaras[camara_actual].getSeleccion() == ESFERA){
+      tmp = cono->getMaterial();
+      cono->setMaterial(cono->getMaterialSeleccion());
+
+   }else if(camaras[camara_actual].getSeleccion() == ESFERA){
       bola->colorear(4);
-   }
-   if(camaras[camara_actual].getSeleccion() == REVO){
+      tmp = bola->getMaterial();
+      bola->setMaterial(bola->getMaterialSeleccion());
+
+   }else if(camaras[camara_actual].getSeleccion() == REVO){
       peon_negro->colorear(4);
-   }
-   if(camaras[camara_actual].getSeleccion() == REVO_2){
+      tmp = peon_negro->getMaterial();
+      peon_negro->setMaterial(peon_negro->getMaterialSeleccion());
+
+   }else if(camaras[camara_actual].getSeleccion() == REVO_2){
       peon_blanco->colorear(4);
-   }
-   if(camaras[camara_actual].getSeleccion() == CILINDRO){
+      tmp = peon_blanco->getMaterial();
+      peon_blanco->setMaterial(peon_blanco->getMaterialSeleccion());
+
+   }else if(camaras[camara_actual].getSeleccion() == CILINDRO){
       cilindro->colorear(4);
+      tmp = cilindro->getMaterial();
+      cilindro->setMaterial(cilindro->getMaterialSeleccion());
    }
 
    // if(camaras[camara_actual].getSeleccion() == ARCADE){
@@ -286,7 +311,7 @@ void Escena::dibujarObjeto(GLenum modo){
 
    if (tetraedro != nullptr && visibilidad_objetos[1]){
       glPushMatrix();
-         glTranslatef(-100.0,0.0, 0.0);
+         glTranslatef(-125.0,0.0, 0.0);
          tetraedro->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
 
@@ -294,8 +319,9 @@ void Escena::dibujarObjeto(GLenum modo){
 
    if (objetoply != nullptr && visibilidad_objetos[2]){
       glPushMatrix();
-         glTranslatef(100.0,0.0, 0.0);
-         glScalef(10.0, 10.0, 10.0);
+         glTranslatef(0.0,-115.0, -95.0);
+         glRotatef(180,0,1,0);
+         glScalef(13.0, 13.0, 13.0);
          objetoply->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
 
@@ -304,7 +330,7 @@ void Escena::dibujarObjeto(GLenum modo){
    if (peon_blanco != nullptr && visibilidad_objetos[7]){
 
       glPushMatrix();
-         glTranslatef(100.0,0.0, 0.0);
+         glTranslatef(100.0,0.0, 70.0);
          glScalef(20.0, 20.0, 20.0);
          peon_blanco->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
@@ -312,6 +338,7 @@ void Escena::dibujarObjeto(GLenum modo){
    if (peon_negro != nullptr && visibilidad_objetos[3]){
 
       glPushMatrix();
+         glTranslatef(0.0,0.0, 70.0);
          glScalef(20.0, 20.0, 20.0);
          peon_negro->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
@@ -326,14 +353,36 @@ void Escena::dibujarObjeto(GLenum modo){
    }
    
    if (bola != nullptr && visibilidad_objetos[6]){
+      glPushMatrix();
+         glTranslatef(-200.0,0.0, 0.0);   
          bola->draw(modo_dibujado, visualizacion_dibujado[3]);
+      glPopMatrix();
    }
 
    if (arcade != nullptr && visibilidad_objetos[8]){
       glPushMatrix();
+         glRotatef(180,0,1,0);
          arcade->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
 
+   }
+
+   if(camaras[camara_actual].getSeleccion() == CUBO){
+      cubo->setMaterial(tmp);
+   }else if(camaras[camara_actual].getSeleccion() == TETRAEDRO){
+      tetraedro->setMaterial(tmp);
+   }else if(camaras[camara_actual].getSeleccion() == OBJPLY){
+      objetoply->setMaterial(tmp);
+   }else if(camaras[camara_actual].getSeleccion() == CONO){
+      cono->setMaterial(tmp);
+   }else if(camaras[camara_actual].getSeleccion() == ESFERA){
+      bola->setMaterial(tmp);
+   }else if(camaras[camara_actual].getSeleccion() == REVO){
+      peon_negro->setMaterial(tmp);
+   }else if(camaras[camara_actual].getSeleccion() == REVO_2){
+      peon_blanco->setMaterial(tmp);
+   }else if(camaras[camara_actual].getSeleccion() == CILINDRO){
+      cilindro->setMaterial(tmp);
    }
 }
 
@@ -344,14 +393,20 @@ void Escena::clickRaton(int boton, int estado, int x, int y){
 
    if(boton == GLUT_RIGHT_BUTTON){
       if(estado == GLUT_DOWN){
-         estadoRaton=EXAMINAR;
+         if(camaras[camara_actual].getSeleccion() == NINGUNO){
+            estadoRaton = PRIMERA_PERSONA;
+         } else {
+            estadoRaton = EXAMINAR;
+         }
       } else {
          estadoRaton = DESACTIVADO;
       }
    } else if (boton == 3){ //Este tres es como tiene implementado glut la rueda del raton hacia arriba
       camaras[camara_actual].zoom(1.2);
+      change_projection();
    } else if (boton == 4){ //Este cuatro es como tiene implementado glut la rueda del raton hacia abajo
 		camaras[camara_actual].zoom(0.8);
+      change_projection();
    } else if (boton == GLUT_LEFT_BUTTON){
       if (estado == GLUT_UP){
 			dibujaSeleccion();
@@ -398,7 +453,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                  << "N --> Entrar en modo control de animacion" << endl
                  << "C --> Entrar en modo camaras" << endl
                  << "A --> Modificar alfa (si luz encendida)"<< endl
-                 << "B --> Modificar beta (si luz encendida)"<< endl;
+                 << "B --> Modificar beta (si luz encendida)"<< endl
+                 << "- (Guion) --> Quitar seleccion" << endl;
             }
          else {
             salir=true ;
@@ -547,6 +603,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                  << "Y --> Bajar Joystick" << endl;
 
          }
+         break;
+
+         case '-':
+         camaras[camara_actual].setSeleccion(NINGUNO);
          break;
 
          case 'E':
@@ -774,16 +834,39 @@ void Escena::getClick(int x, int y){
    if (cubo!= nullptr && pixel == cubo->getColorSeleccion()){
 		centro = {125, 0, 0};
 		camaras[camara_actual].setAt(centro);
-
 		camaras[camara_actual].setSeleccion(CUBO);
    }
+   if (tetraedro!= nullptr && pixel == tetraedro->getColorSeleccion()){
+		centro = {-125, 25, 0};
+		camaras[camara_actual].setAt(centro);
 
-   
+		camaras[camara_actual].setSeleccion(TETRAEDRO);
+   }
    if (bola!= nullptr && pixel == bola->getColorSeleccion()){
-		centro = {125, 0, 0};
+		centro = {-200, 0, 0};
 		camaras[camara_actual].setAt(centro);
 
 		camaras[camara_actual].setSeleccion(ESFERA);
+   }
+
+   if (objetoply!= nullptr && pixel == objetoply->getColorSeleccion()){
+		centro = {0, -100, -95};
+		camaras[camara_actual].setAt(centro);
+
+		camaras[camara_actual].setSeleccion(OBJPLY);
+   }
+
+   if (peon_blanco!= nullptr && pixel == peon_blanco->getColorSeleccion()){
+		centro = {100, 0, 70};
+		camaras[camara_actual].setAt(centro);
+
+		camaras[camara_actual].setSeleccion(REVO_2);
+   }
+   if (peon_negro!= nullptr && pixel == peon_negro->getColorSeleccion()){
+		centro = {0, 0, 70};
+		camaras[camara_actual].setAt(centro);
+
+		camaras[camara_actual].setSeleccion(REVO);
    }
 }
 

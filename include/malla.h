@@ -43,8 +43,12 @@ class Malla3D
    void colorear(int tipo);
    
    void setMaterial (const Material & m);
+   Material getMaterial();
    void setColorSeleccion(Tupla3f color);
    Tupla3f getColorSeleccion() ;
+      
+   void setMaterialSeleccion(Material mat);
+   Material getMaterialSeleccion() ;
 
    protected:
 
@@ -74,6 +78,7 @@ class Malla3D
    // completar: tabla de colores, tabla de normales de vértices
 
    //Colores
+   Material mat_seleccion = Material({0.1745, 0.01175, 0.01175, 1}, {0.61424, 0.04136, 0.04136, 1}, {0.727811, 0.626959, 0.626959, 1}, 128.0f * 0.6f );
    Tupla3f color;
    Tupla3f color_aj_1;
    Tupla3f color_aj_2;
