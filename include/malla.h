@@ -43,6 +43,8 @@ class Malla3D
    void colorear(int tipo);
    
    void setMaterial (const Material & m);
+   void setColorSeleccion(Tupla3f color);
+   Tupla3f getColorSeleccion() ;
 
    protected:
 
@@ -77,6 +79,7 @@ class Malla3D
    Tupla3f color_aj_2;
    Tupla3f color_aristas;
    Tupla3f color_vertices;
+   Tupla3f color_seleccion;
 } ;
 
 

@@ -241,11 +241,31 @@ void Malla3D::draw(int modo_dibujado, bool ajedrez)
       draw_ModoInmediato(ajedrez);
    } else if (modo_dibujado == 1){
       draw_ModoDiferido(ajedrez);
+   } else if (modo_dibujado == 2){ // Modo selecion
+      bool luces = glIsEnabled(GL_LIGHTING); //Guardamos el estado anterior de las uces
+      glDisable(GL_LIGHTING); //Apagamos
+
+      std::vector<Tupla3f> colores_aux = c; //Vector auxiliar de colores
+      
+      c = std::vector<Tupla3f>  (c.size(), color_seleccion); //Para que pinte edl color seleccion
+      draw_ModoInmediato(false); //Modo ajedrez falso
+      c = colores_aux; //Reestablecemos colores
+      if(luces){
+         glEnable(GL_LIGHTING);
+      }
    }
 
 }
+
+void Malla3D::setColorSeleccion(Tupla3f color){
+   color_seleccion = color;
+}
 Tupla3f Malla3D::getColorSolido(){
    return (color);
+}
+
+Tupla3f Malla3D::getColorSeleccion(){
+   return(color_seleccion);
 }
 
 Tupla3f Malla3D::getColorPunto(){
@@ -277,5 +297,8 @@ void Malla3D::colorear(int tipo){
       c_aj1 = std::vector<Tupla3f>(v.size(), color_aj_1);
       c_aj2 = std::vector<Tupla3f>(v.size(), color_aj_2);
 
+   } else if ( tipo ==4){
+      c = std::vector<Tupla3f>(v.size(), color_seleccion);
    }
+   
 }

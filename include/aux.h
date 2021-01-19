@@ -39,7 +39,7 @@
 #include "tuplasg.h" // tipos: Tupla3f, Tupla2f, Tupla3d, etc.........
 
 bool comparaFloats(float a, float b, float epsilon = 0.00005f);
-
+bool operator == (const Tupla3f & t1, const Tupla3f & t2);
 #define SEXA_TO_RAD M_PI/180
 #define RAD_TO_SEXA 180/M_PI
 

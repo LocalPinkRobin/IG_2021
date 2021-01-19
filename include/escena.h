@@ -13,10 +13,11 @@
 #include "luz_direccional.h"
 #include "luz_posicional.h"
 #include "arcade.h"
+#include "camara.h"
 
 
-
-typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO, V_ALFA, V_BETA} menu;
+typedef enum {PRIMERA_PERSONA, EXAMINAR, DESACTIVADO} EstadosRaton;
+typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO, V_ALFA, V_BETA, ANIMACION, CAMARA} menu;
 class Escena
 {
 
@@ -35,7 +36,7 @@ class Escena
     GLfloat Width, Height, Front_plane, Back_plane;
 
     // Transformación de cámara
-    void change_projection( const float ratio_xy );
+    void change_projection();
     void change_observer();
 
 
@@ -54,7 +55,10 @@ class Escena
 
     bool animacionAutomatica = false;
 
+
     Arcade * arcade = nullptr;
+    const float MORE = 1.2;
+    const float LESS = 0.8;
     float incrementoRotaXJoystick = 5;
     float incrementoRotaZJoystick = 2;
     float rotacionPantalla = 2;
@@ -74,9 +78,14 @@ class Escena
     std::vector<bool> visibilidad_objetos;
     std::vector<bool> visualizacion_dibujado;
 
+    int camara_actual;
+    std::vector<Camara> camaras;
 
+    EstadosRaton estadoRaton = DESACTIVADO;
+	int xant = 0;
+	int yant = 0;
 
-
+    void seleccionaCamara(const int numeroCamara);
 
 
     public:
@@ -87,10 +96,15 @@ class Escena
     void dibujarObjeto(GLenum modo);
     // Dibujar
     void dibujar() ;
+    void dibujaSeleccion();
 
     // Interacción con la escena
+    void clickRaton(int boton, int estado, int x, int i);
+    void ratonMovido(int x, int y);
     bool teclaPulsada( unsigned char Tecla1, int x, int y ) ;
     void teclaEspecial( int Tecla1, int x, int y );
+    void getClick (int x, int y);
+
 
     void animarModeloJerarquico();
 };

@@ -10,8 +10,22 @@
 #include "aux.h" // includes de OpenGL, windows, y librería std de C++
 #include "escena.h"
 
-Escena *escena = nullptr ;
 // variable que contiene un puntero a la escena
+Escena *escena = nullptr ;
+
+void clickRaton(int boton, int estado, int x, int y){
+
+	escena->clickRaton(boton, estado, x, y);
+
+}
+
+
+
+void ratonMovido(int x, int y){
+
+	escena->ratonMovido(x, y);
+
+}
 
 void funcion_idle(){
    if (escena !=0)
@@ -162,8 +176,13 @@ int main( int argc, char **argv )
 
 cout << "V --> Entrar en modo visualización" << endl
      << "O --> Entrar en modo seleccion objeto" << endl
-    <<  "D --> Entrar en modo de dibujado"<< endl;
+     <<  "D --> Entrar en modo de dibujado"<< endl
+     << "N --> Entrar en modo control de animacion" << endl
+      << "C --> Entrar en modo camaras" << endl;
+
    // ejecutar del bucle de eventos
+   glutMouseFunc(clickRaton);
+   glutMotionFunc(ratonMovido);
    glutMainLoop();
 
    return 0;

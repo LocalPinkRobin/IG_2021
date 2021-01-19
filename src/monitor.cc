@@ -9,8 +9,8 @@ void Monitor::draw(int modo_dibujado, bool ajedrez){
     glPopMatrix();
 
     glPushMatrix();
-        glTranslatef(0,10,0);
-        glScalef(2,0.5,1);
+        glTranslatef(0,10,6);
+        glScalef(2,0.5,0.8);
         base->draw(modo_dibujado,ajedrez);
     glPopMatrix();
     

@@ -14,6 +14,7 @@ class Arcade {
         Monitor *superior = new Monitor ();
 
         float rotaY = 0;
+        Tupla3f color_seleccion;
 
     public:
         void draw(int modo_dibujado, bool ajedrez);
