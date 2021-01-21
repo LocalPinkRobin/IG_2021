@@ -3,7 +3,7 @@
 
 #include "aux.h"
 
-typedef enum {CUBO, TETRAEDRO, CONO, ESFERA, OBJPLY, REVO, REVO_2, ARCADE,CILINDRO, NINGUNO} objetos;
+typedef enum {CUBO, TETRAEDRO, CONO, ESFERA, OBJPLY, REVO, REVO_2, ARCADE, ARCADE2,CILINDRO, NINGUNO} objetos;
 
 
 class Camara {

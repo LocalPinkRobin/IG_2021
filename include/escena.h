@@ -57,6 +57,8 @@ class Escena
 
 
     Arcade * arcade = nullptr;
+    Arcade * arcade2 = nullptr;
+
     const float MORE = 1.2;
     const float LESS = 0.8;
     float incrementoRotaXJoystick = 5;

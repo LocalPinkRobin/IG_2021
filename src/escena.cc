@@ -34,26 +34,28 @@ Escena::Escena()
     cono->setColorSeleccion({1,1,0});
     bola = new Esfera(25, 50,50, true, true);
     bola->setColorSeleccion({1,0,1});
-    cilindro = new Cilindro( 50, 25, 50,true, true, Eje::EJEZ);
+    cilindro = new Cilindro( 50, 25, 50,true, true);
     cilindro->setColorSeleccion({0,1,1}); 
     peon_blanco = new ObjRevolucion("./plys/peon.ply", 50,true,true,Eje::EJEY);
     peon_blanco->setColorSeleccion({0.8,0.8,0.8});
     peon_negro = new ObjRevolucion("./plys/peon.ply", 50,true,true,Eje::EJEY);
     peon_negro->setColorSeleccion({0.2,0.2,0.2});
     arcade = new Arcade ();
+    arcade2 = new Arcade ();
 
-    int num_obj = 9; // 0. peon 1. peon
+    int num_obj = 10; // 0. peon 1. peon
 
    visibilidad_objetos.resize(num_obj);
-   visibilidad_objetos [0] = false;
+   visibilidad_objetos [0] = true;
    visibilidad_objetos [1] = false;
-   visibilidad_objetos [2] = false;
-   visibilidad_objetos [3] = false;
-   visibilidad_objetos [4] = false;
+   visibilidad_objetos [2] = true;
+   visibilidad_objetos [3] = true;
+   visibilidad_objetos [4] = true;
    visibilidad_objetos [5] = false;
    visibilidad_objetos [6] = false;
-   visibilidad_objetos [7] = false;
+   visibilidad_objetos [7] = true;
    visibilidad_objetos [8] = true;
+   visibilidad_objetos [9] = true;
    
 
 
@@ -303,7 +305,9 @@ void Escena::dibujarObjeto(GLenum modo){
 
    if (cubo != nullptr && visibilidad_objetos[0]){
       glPushMatrix();
-         glTranslatef(100.0,0.0, 0.0);
+         glTranslatef(100.0,0.0, 50.0);
+         glRotatef(90,0,1,0);
+         glScalef(4.0, 0.25, 5.0);
          cubo->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
 
@@ -319,8 +323,7 @@ void Escena::dibujarObjeto(GLenum modo){
 
    if (objetoply != nullptr && visibilidad_objetos[2]){
       glPushMatrix();
-         glTranslatef(0.0,-115.0, -95.0);
-         glRotatef(180,0,1,0);
+         glTranslatef(0.0,-115.0, -110.0);
          glScalef(13.0, 13.0, 13.0);
          objetoply->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
@@ -330,22 +333,27 @@ void Escena::dibujarObjeto(GLenum modo){
    if (peon_blanco != nullptr && visibilidad_objetos[7]){
 
       glPushMatrix();
-         glTranslatef(100.0,0.0, 70.0);
-         glScalef(20.0, 20.0, 20.0);
+         glTranslatef(100.0,20.0, 70.0);
+         glScalef(10.0, 10.0, 10.0);
          peon_blanco->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
    }
    if (peon_negro != nullptr && visibilidad_objetos[3]){
 
       glPushMatrix();
-         glTranslatef(0.0,0.0, 70.0);
-         glScalef(20.0, 20.0, 20.0);
+         glTranslatef(0.0,20.0, 70.0);
+         glScalef(10.0, 10.0, 10.0);
          peon_negro->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
    }
 
    if (cilindro != nullptr && visibilidad_objetos[4]){
+      glPushMatrix();
+         glTranslatef(100.0,-50.0, 50.0);
+         glScalef(1.2, 2.0, 1.2);
          cilindro->draw(modo_dibujado, visualizacion_dibujado[3]);
+      glPopMatrix();
+
    }
 
    if (cono != nullptr && visibilidad_objetos[5]){
@@ -361,8 +369,15 @@ void Escena::dibujarObjeto(GLenum modo){
 
    if (arcade != nullptr && visibilidad_objetos[8]){
       glPushMatrix();
-         glRotatef(180,0,1,0);
+         glTranslatef(0,0,-200);
          arcade->draw(modo_dibujado, visualizacion_dibujado[3]);
+      glPopMatrix();
+
+   }
+   if (arcade2 != nullptr && visibilidad_objetos[9]){
+      glPushMatrix();
+         glTranslatef(200,0,-200);
+         arcade2->draw(modo_dibujado, visualizacion_dibujado[3]);
       glPopMatrix();
 
    }
